@@ -64,10 +64,10 @@ public class Game {
     private Player getPlayerType(int playerNum) {
         boolean check = false;
         Scanner scanner = new Scanner(System.in);
-        int number = 0;
+        String number = "";
         while(!check){
-            number =  scanner.nextInt();
-            if(number > 0 && number<3){
+            number =  scanner.nextLine();
+            if(number.equals("1") || number.equals("2")){
                check = true;
             }
             else{
@@ -75,7 +75,7 @@ public class Game {
             }
         }
 
-        Player player = (number == 1)?new HumanPlayer(playerNum):new ComputerPlayer(playerNum);
+        Player player = (number.equals("1"))?new HumanPlayer(playerNum):new ComputerPlayer(playerNum);
 
         return player;
     }
