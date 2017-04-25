@@ -1,18 +1,16 @@
 import java.util.Scanner;
 
 public class Game {
-
     private Player player1;
     private Player player2;
     public Player currentPlayer;
     public Board board;
 
-
     Game() {
         board = new Board();
-        displayMsg(Messenger.CREATE_PLAYER_ONE);
+        System.out.println(Messege.CREATE_PLAYER_ONE);
         player1 = createPlayer(1);
-        displayMsg(Messenger.CREATE_PLAYER_TWO);
+        System.out.println(Messege.CREATE_PLAYER_TWO);
         player2 = createPlayer(2);
         currentPlayer = player1;
     }
@@ -21,12 +19,10 @@ public class Game {
         board.display();
         Boolean winner = false;
         while ( board.checkBord() && !winner ){
-
-            board.setHitMark(currentPlayer.getMark());
             int hit = currentPlayer.getHit();
             if( board.checkHit(hit) ){
-                board.updateBoard();
-                if(board.checkWinner()){
+                board.updateBoard(currentPlayer.getMark(),hit);
+                if(board.checkWinner(currentPlayer.getMark(),hit)){
                     winner = true;
                 }
                 else{
@@ -34,18 +30,17 @@ public class Game {
                 }
             }
             else{
-                displayMsg(board.messege);
+                System.out.println(board.messege);
             }
             board.display();
         }
         if(winner){
             System.out.print(currentPlayer.getPlayerName());
-            displayMsg(Messenger.WINNER);
+            System.out.println(Messege.WINNER);
         }
         else{
-            displayMsg(Messenger.FULL_BOARD);
+            System.out.println(Messege.FULL_BOARD);
         }
-
     }
 
     private void changeTurn(){
@@ -71,16 +66,10 @@ public class Game {
                check = true;
             }
             else{
-                displayMsg(Messenger.INVALID_PLAYER_NUM);
+                System.out.println(Messege.INVALID_PLAYER_NUM);
             }
         }
-
         Player player = (number.equals("1"))?new HumanPlayer(playerNum):new ComputerPlayer(playerNum);
-
         return player;
-    }
-
-    public void displayMsg(Messenger msg){
-        System.out.print(msg);
     }
 }
