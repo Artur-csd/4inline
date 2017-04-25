@@ -11,6 +11,14 @@ public abstract class Player {
         this.mark = mark;
     }
 
+    public void selectPlayerMark(int playerNum){
+        if (playerNum == 1) {
+            setMark(Mark.X);
+        } else {
+            setMark(Mark.O);
+        }
+    }
+
     public String getPlayerName() {
         return playerName;
     }
@@ -19,14 +27,5 @@ public abstract class Player {
         this.playerName = playerName;
     }
 
-
-    public void TurmMessage(){
-        System.out.print(getPlayerName() + " - " + Messenger.INFO_TEXT);
-    }
-
-
     public abstract int getHit();
-
-
-
 }

@@ -3,28 +3,17 @@ public class Board {
     private static final int HEIGHT = 6;
     private static final int WIDTH = 7;
     private  static  final int SLOTS_TO_WIN = 4;
-    private int hitX = 0;
-    private int hitY = 0;
-    public Messenger messege = Messenger.NO_MSG;
-    private Mark hitMark = Mark.EMPTY;
-
+    public Messege messege = Messege.NO_MSG;
     public Mark[][] boardArr = new Mark[HEIGHT][WIDTH];
-
 
     Board() {
         for(int iHeight=0; iHeight<HEIGHT; iHeight++)
         {
             for(int iWidth=0; iWidth<WIDTH; iWidth++){
-                boardArr[iHeight][iWidth] =  hitMark;
+                boardArr[iHeight][iWidth] =  Mark.EMPTY;
             }
         }
     }
-
-
-    public void setHitMark(Mark hitMark) {
-        this.hitMark = hitMark;
-    }
-
 
     public void display(){
         NumRow();
@@ -36,51 +25,33 @@ public class Board {
         }
     }
 
-
     public Boolean checkHit(int hit){
-        return checkCol(hit) && checkRow(getRow(hit));
-    }
-
-
-    private Boolean checkCol(int hit){
-        if(hit >= 0 && hit < WIDTH){
-            hitX = hit;
-            return true;
-        }
-        else{
-            this.messege = Messenger.FROM_ONE_TO_SEVEN;
-            return false;
-        }
+        return checkRow(getRow(hit));
     }
 
 
     private boolean checkRow(int row) {
         if(row < HEIGHT){
-            hitY = row;
             return true;
         }
         else{
-            this.messege = Messenger.COLUMN_NO_SLOT;
+            this.messege = Messege.COLUMN_NO_SLOT;
             return false;
         }
     }
 
-
-    private int getRow(int instNum){
+    private int getRow(int hit){
         for(int i=0; i< HEIGHT; i++){
-            if(this.boardArr[i][instNum] == Mark.EMPTY){
+            if(this.boardArr[i][hit] == Mark.EMPTY){
                 return i;
             }
         }
         return HEIGHT;
     }
 
-
-    public void updateBoard(){
-        this.boardArr[hitY][hitX] = hitMark;
+    public void updateBoard(Mark mark, int hit){
+        this.boardArr[getRow(hit)][hit] = mark;
     }
-
-
 
     public boolean checkBord() {
         for(int iHeight=0; iHeight<HEIGHT; iHeight++)
@@ -94,19 +65,18 @@ public class Board {
         return false;
     }
 
-    public Boolean checkWinner(){
-        if( checkHorizontal() || checkVertical() || checkDiagonalUp() || checkDiagonalDown()){
+    public Boolean checkWinner(Mark mark,int hit){
+        if( checkHorizontal(mark, hit) || checkVertical(mark, hit) || checkDiagonalUp(mark, hit) || checkDiagonalDown(mark, hit)){
             return true;
         }
         else {return false;}
-
-
     }
 
-    private Boolean checkHorizontal(){
+    private Boolean checkHorizontal(Mark mark,int hitX){
         int count = 0;
+        int hitY = getRow(hitX)-1;
         for(int iWidth=0; iWidth<WIDTH; iWidth++){
-            count = boardArr[hitY][iWidth]==hitMark ? ++count : 0;
+            count = boardArr[hitY][iWidth]==mark ? ++count : 0;
             if (count == SLOTS_TO_WIN){
                 return true;
             }
@@ -114,10 +84,10 @@ public class Board {
         return false;
     }
 
-    private Boolean checkVertical(){
+    private Boolean checkVertical(Mark mark, int hitX){
         int count = 0;
         for(int iHeight=0; iHeight<HEIGHT; iHeight++){
-            count = (boardArr[iHeight][hitX] == hitMark) ? ++count : 0;
+            count = (boardArr[iHeight][hitX] == mark) ? ++count : 0;
             if (count == SLOTS_TO_WIN){
                 return true;
             }
@@ -125,12 +95,11 @@ public class Board {
         return false;
     }
 
-
-
-    private Boolean checkDiagonalUp(){
+    private Boolean checkDiagonalUp(Mark mark, int hitX){
         int xStart;
         int yStart;
         int times;
+        int hitY = getRow(hitX)-1;
         if(hitX > hitY){
             xStart = hitX - hitY;
             yStart = 0;
@@ -138,13 +107,13 @@ public class Board {
         }
         else{
             xStart = 0;
-            yStart = hitY - hitX;
+            yStart = getRow(hitX)-1 - hitX ;
             times = HEIGHT - yStart;
         }
         int count = 0;
 
         for(int i=0; i<times; i++){
-            count = (boardArr[yStart+i][xStart+i] == hitMark) ? ++count : 0;
+            count = (boardArr[yStart+i][xStart+i] == mark) ? ++count : 0;
             if (count == SLOTS_TO_WIN){
                 return true;
             }
@@ -152,9 +121,9 @@ public class Board {
         return false;
     }
 
-    private Boolean checkDiagonalDown(){
+    private Boolean checkDiagonalDown(Mark mark, int hitX){
         int xStart;
-        int yStart = hitX + hitY;
+        int yStart = hitX + getRow(hitX)-1;
         int times;
         if(yStart >= HEIGHT){
             xStart = yStart - (HEIGHT-1);
@@ -168,14 +137,13 @@ public class Board {
         int count = 0;
 
         for(int i=0; i<times; i++){
-            count = (boardArr[yStart-i][xStart+i] == hitMark) ? ++count : 0;
+            count = (boardArr[yStart-i][xStart+i] == mark) ? ++count : 0;
             if (count == SLOTS_TO_WIN){
                 return true;
             }
         }
         return false;
     }
-
 
     private void NumRow(){
         System.out.println("\n");

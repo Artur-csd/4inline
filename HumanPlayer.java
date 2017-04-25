@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class HumanPlayer extends Player{
@@ -6,47 +8,28 @@ public class HumanPlayer extends Player{
     private  Scanner scanner = new Scanner(System.in);
 
     public HumanPlayer(int numberOfPlayer) {
-        if (numberOfPlayer == 2) {
-            setMark(Mark.O);
-        } else {
-            setMark(Mark.X);
-        }
-
-
-        System.out.println(Messenger.ENTER_PLAYER_NAME +" "+ numberOfPlayer +":");
+        selectPlayerMark(numberOfPlayer);
+        System.out.println(Messege.ENTER_PLAYER_NAME +" "+ numberOfPlayer +":");
         setPlayerName(scanner.nextLine());
-
     }
 
     @Override
     public int getHit() {
-        Integer move = 0;
-        boolean validMove = false;
-
-        while (!validMove) {
-            try {
-                TurmMessage();
-                move = Integer.parseInt(scanner.nextLine());
-
-                if ((move >= 1) && (move <= 7)) {
-
-                    validMove = true;
-
-                } else {
-
-                    System.out.println(Messenger.SET_VALID_NUM);
-                }
-
-            } catch (Exception e) {
-                System.out.println(Messenger.SET_VALID_NUM);
+        boolean check = false;
+        Scanner scanner = new Scanner(System.in);
+        int number = 1;
+        while(!check){
+            String input = scanner.nextLine();
+            Pattern p = Pattern.compile("^[1-7]{1}");
+            Matcher m = p.matcher(input);
+            if(m.matches()){
+             number =  Integer.parseInt(input);
+                check = true;
+            }
+            else{
+                System.out.println(Messege.SET_VALID_NUM);
             }
         }
-
-        return move-1;
+        return number-1;
     }
-
-
-
-
-
 }
